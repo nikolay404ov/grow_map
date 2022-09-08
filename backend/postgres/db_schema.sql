@@ -15,10 +15,7 @@ CREATE TABLE IF NOT EXISTS grow_map.card (
     progress TEXT,
     comment TEXT,
     created TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    modified TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT fk_person
-      FOREIGN KEY(person_id)
-        REFERENCES person(id)
+    modified TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
