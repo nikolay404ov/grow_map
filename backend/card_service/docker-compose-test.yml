@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  card_service_tests:
+    build:
+      context: .
+      dockerfile: ./tests/Dockerfile
+    container_name: card_service_tests
+    volumes:
+      - ./tests/:/usr/app/
+    depends_on:
+      - card_service
+    networks:
+      - common-network
+
+  card_service:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    container_name: card_service
+    volumes:
+      - ./src/:/usr/app/
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    external:
+      name: postgres_common-network

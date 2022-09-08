@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    env_file:
+      - ./.env
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

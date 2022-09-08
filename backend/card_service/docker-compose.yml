@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  card_service:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    container_name: card_service
+    ports:
+      - '8000:8000'
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    external:
+      name: postgres_common-network
