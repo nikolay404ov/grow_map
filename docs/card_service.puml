@@ -1,0 +1,47 @@
+@startuml
+"Client"
+"Admin"
+
+package web-server #LightGray {
+    [nginx_front] #LightGreen
+    [react_frontend] #White
+}
+
+package auth_api #LightGray {
+    [nginx_auth] #LightGreen
+    [flask_auth_api] #White
+    database postgres_auth #Aqua
+    database redis_auth #LightPink
+}
+
+package card_api #LightGray {
+    [nginx_card] #LightGreen
+    [fastapi_card] #White
+    database postgres_card #Aqua
+    database redis_card #LightPink
+    [django_admin_panel] #White
+}
+
+
+[Client] --> [nginx_front]
+[nginx_front] --> [react_frontend]
+
+[react_frontend] --> [nginx_auth]: get token
+[react_frontend] --> [nginx_card]: work with card api
+[nginx_auth] --> [flask_auth_api]: work with login/logout/registration
+[flask_auth_api] <-> postgres_auth: work with data
+redis_auth <-> [flask_auth_api]: cache requests
+
+[nginx_card] --> [fastapi_card]: work with card
+[fastapi_card] --> [nginx_auth]: check request token
+
+[fastapi_card] <-> postgres_card: work with data
+redis_card <-> [fastapi_card]: cache requests
+[django_admin_panel] --> postgres_card: direct editing with admin UI
+
+[Admin] --> [django_admin_panel]
+
+note right of [Client]: Client request
+note right of [Admin]: Direct editing with UI
+
+@enduml

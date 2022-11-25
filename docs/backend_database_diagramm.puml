@@ -1,0 +1,87 @@
+@startuml
+left to right direction
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam handwritten false
+
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( person ) {
+  primary_key( id ): UUID
+  column( person_name ): STRING
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+  foreign_key( grade_id ): UUID <<FK>>
+}
+
+table( grade ) {
+  primary_key( id ): UUID
+  column( grade_name ): STRING
+  column( unit_name ): STRING
+  column( grade_number ): INTEGER
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+}
+
+table( card ) {
+  primary_key( id ): UUID
+  column( start_time ): TIMESTAMP
+  column( end_time ): TIMESTAMP
+  foreign_key( person_id ): UUID <<FK>>
+}
+
+table( domen ) {
+  primary_key( id ): UUID
+  column( name ): STRING
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+}
+
+table( card_domen ) {
+  primary_key( id ): UUID
+  column( active ): BOOLEAN
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+  foreign_key( card_id ): UUID <<FK>>
+  foreign_key( domen_id ): UUID <<FK>>
+}
+
+table( card_domen_tasks ) {
+  primary_key( id ): UUID
+  column( description ): STRING
+  column( tracker_link ): STRING
+  column( definition_of_done ): STRING
+  column( status ): STRING
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+  foreign_key( card_domen_id ): UUID <<FK>>
+}
+
+table( commitments ) {
+  primary_key( id ): UUID
+  column( description ): STRING
+  column( active ): BOOLEAN
+  column( created ): TIMESTAMP
+  column( modified ): TIMESTAMP
+  foreign_key( card_id ): UUID <<FK>>
+}
+
+person ||--|{ card
+person }|--|| grade
+card ||--|{ card_domen
+card_domen }|--|| domen
+card_domen ||--|{ card_domen_tasks
+
+card ||--|{ commitments
+
+@enduml
